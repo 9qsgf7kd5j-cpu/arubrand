@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AruBeauty — Premium Store</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+    <div class="logo" onclick="filtruyKategoriyu('all')">AruBeauty</div>
+
+    <div class="lang-switch">
+        <button onclick="smenitYazyk('ru')">RU</button>
+        <button onclick="smenitYazyk('kz')">KZ</button>
+        <button onclick="smenitYazyk('en')">EN</button>
+    </div>
+
+    <div class="poisk">
+        <input type="text" id="searchInput" placeholder="Поиск..." oninput="sortiruy()">
+    </div>
+
+    <div class="nav-icons">
+        <button class="big-nav-btn" onclick="pokazatStranitsu('fav-page')">
+            <i class="fas fa-heart"></i> <span id="txt-fav-btn">Избранное</span> (<span id="favCount">0</span>)
+        </button>
+        <button class="big-nav-btn cart-btn" onclick="pokazatStranitsu('cart-page')">
+            <i class="fas fa-shopping-cart"></i> <span id="txt-cart-btn">Корзина</span> (<span id="cartCount">0</span>)
+        </button>
+    </div>
+</header>
+
+<div class="main-container">
+    <aside class="sidebar">
+        <h3 id="txt-cat-title">Категории</h3>
+        <div class="cat-list">
+            <button onclick="filtruyKategoriyu('all')" id="btn-all">Все товары</button>
+            <button onclick="filtruyKategoriyu('sale')" class="sale-link"><i class="fas fa-percent"></i> <span id="btn-sale">Акции</span></button>
+
+            <button onclick="filtruyKategoriyu('makeup')" id="cat-makeup">Макияж <i class="fas fa-chevron-down"></i></button>
+            <div id="sub-makeup" class="sub-cats">
+                <button onclick="filtruyPodkategoriyu('face')" id="cat-face">Для лица</button>
+                <button onclick="filtruyPodkategoriyu('lips')" id="cat-lips">Для губ</button>
+                <button onclick="filtruyPodkategoriyu('eyes')" id="cat-eyes">Для глаз</button>
+            </div>
+
+            <button onclick="filtruyKategoriyu('care')" id="cat-care">Уход <i class="fas fa-chevron-down"></i></button>
+            <div id="sub-care" class="sub-cats">
+                <button onclick="filtruyPodkategoriyu('face-care')" id="cat-facecare">Лицо</button>
+                <button onclick="filtruyPodkategoriyu('body')" id="cat-body">Тело</button>
+                <button onclick="filtruyPodkategoriyu('spf')" id="cat-spf">SPF защита</button>
+            </div>
+
+            <button onclick="filtruyKategoriyu('perfume')" id="cat-perfume">Парфюм <i class="fas fa-chevron-down"></i></button>
+            <div id="sub-perfume" class="sub-cats">
+                <button onclick="filtruyPodkategoriyu('woman')" id="cat-woman">Женский</button>
+                <button onclick="filtruyPodkategoriyu('man')" id="cat-man">Мужской</button>
+                <button onclick="filtruyPodkategoriyu('niche')" id="cat-niche">Ниша</button>
+            </div>
+
+            <button onclick="filtruyKategoriyu('hair')" id="cat-hair">Волосы <i class="fas fa-chevron-down"></i></button>
+            <div id="sub-hair" class="sub-cats">
+                <button onclick="filtruyPodkategoriyu('shampoo')" id="cat-shampoo">Шампуни</button>
+                <button onclick="filtruyPodkategoriyu('mask')" id="cat-mask">Маски/Масла</button>
+                <button onclick="filtruyPodkategoriyu('tools')" id="cat-tools">Инструменты</button>
+            </div>
+
+            <button onclick="filtruyKategoriyu('vits')" id="cat-vits">БАДы</button>
+            <button onclick="filtruyKategoriyu('asia')" id="cat-asia">Азия</button>
+            <button onclick="filtruyKategoriyu('men')" id="cat-men">Мужчинам</button>
+            <button onclick="filtruyKategoriyu('kids')" id="cat-kids">Детям</button>
+        </div>
+    </aside>
+
+    <main>
+        <section id="catalog-page" class="page active">
+            <div class="sorting-panel" style="margin-bottom: 20px; display: flex; justify-content: flex-end;">
+                <select id="priceSort" onchange="sortiruy()" style="padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); cursor: pointer;">
+                    <option value="default">По умолчанию</option>
+                    <option value="low">Сначала дешевые</option>
+                    <option value="high">Сначала дорогие</option>
+                </select>
+            </div>
+            <div class="product-grid" id="product-list"></div>
+        </section>
+
+        <section id="fav-page" class="page">
+            <h2 id="txt-fav-h2">Ваше избранное</h2>
+            <div class="product-grid" id="fav-list"></div>
+        </section>
+
+        <section id="cart-page" class="page">
+            <div class="cart-layout">
+                <div class="cart-items-box">
+                    <h2 id="txt-cart-h2">Оформление заказа</h2>
+                    <div id="cart-items"></div>
+                </div>
+                <div class="order-form-box">
+                    <h3 id="txt-order-title">Данные получателя</h3>
+                    <input type="text" id="order-name" placeholder="Ваше Имя" class="main-input">
+                    <input type="email" id="order-email" placeholder="Email (Почта)" class="main-input">
+                    <input type="tel" id="order-phone" placeholder="+7 (___) ___ __ __" class="main-input">
+
+                    <h4 id="txt-pay-title">Способ оплаты:</h4>
+                    <div class="payment-methods">
+                        <label><input type="radio" name="payment" value="kaspi" checked> Kaspi.kz</label>
+                        <label><input type="radio" name="payment" value="halyk"> Halyk Bank</label>
+                        <label><input type="radio" name="payment" value="other"><span id="txt-other-bank">Другой банк</span></label>
+                    </div>
+
+                    <div class="cart-summary">
+                        <p><span id="txt-total">Итого</span>: <b id="finalSum">0</b> ₸</p>
+                        <button class="confirm-order-btn" onclick="podtverditZakaz()" id="btn-confirm">Заказать сейчас</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<a href="https://wa.me/77775900126" class="whatsapp-btn" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+<div id="review-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="zakrytReview()">&times;</span>
+        <h3 id="txt-rev-title">Оставить отзыв</h3>
+        <div class="star-rating">
+            <i class="fas fa-star" onclick="setStar(1)"></i>
+            <i class="fas fa-star" onclick="setStar(2)"></i>
+            <i class="fas fa-star" onclick="setStar(3)"></i>
+            <i class="fas fa-star" onclick="setStar(4)"></i>
+            <i class="fas fa-star" onclick="setStar(5)"></i>
+        </div>
+        <textarea id="rev-text" placeholder="Ваш отзыв..."></textarea>
+        <button onclick="saveReview()" class="confirm-btn" id="btn-rev">Отправить</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
